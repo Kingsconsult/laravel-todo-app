@@ -21,23 +21,26 @@ class TasksController extends Controller
 
     public function create(Request $request)
     {
+        $this->validate($request, [
+            'description' => 'required'
+        ]);
     	$task = new Task();
     	$task->description = $request->description;
     	$task->user_id = Auth::id();
     	$task->save();
-    	return redirect('/'); 
+    	return redirect('/');
     }
 
     public function edit(Task $task)
     {
 
     	if (Auth::check() && Auth::user()->id == $task->user_id)
-        {            
+        {
                 return view('edit', compact('task'));
-        }           
+        }
         else {
              return redirect('/');
-         }            	
+         }
     }
 
     public function update(Request $request, Task $task)
@@ -48,10 +51,13 @@ class TasksController extends Controller
     	}
     	else
     	{
+    	    $this->validate($request, [
+    	        'description' => 'required'
+            ]);
     		$task->description = $request->description;
 	    	$task->save();
-	    	return redirect('/'); 
-    	}    	
+	    	return redirect('/');
+    	}
     }
 
 }
